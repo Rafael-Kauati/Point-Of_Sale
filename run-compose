@@ -1,0 +1,58 @@
+sudo docker-compose down
+
+cd api/
+
+#echo -e "\n  =================================================================="
+#echo -e "    ================================================================== \n"
+
+echo -e "\n  starting api service at:  \n"
+
+pwd
+
+mvn clean
+
+mvn install
+
+sudo docker rmi iess_pos:latest
+
+sudo docker build -t iess_pos:latest . --rm
+
+
+
+ echo -e "\n  ================================================================== "
+ echo -e "    ================================================================== \n"
+
+ #echo -e "\n  starting client service at:  \n"
+ #cd ../front-end
+
+# pwd
+
+ #sudo docker rmi pos_react:latest
+
+ #sudo docker build -t pos_react:latest . --rm
+
+# echo -e "\n  =================================================================="
+ #echo -e "    ================================================================== \n"
+echo -e "\n  Composing everything at:  \n"
+
+docker images
+
+ echo -e "\n  =================================================================="
+
+docker ps
+
+cd ../
+
+pwd
+
+sudo docker-compose build
+docker images
+docker ps
+
+sudo docker-compose up
+docker images
+docker ps
+
+
+echo -e "\n  ================================================================== \n"
+echo -e "\n  Jā matane~ \n"

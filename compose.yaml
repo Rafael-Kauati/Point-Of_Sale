@@ -1,0 +1,92 @@
+version: '3'
+
+services:
+  react_app:
+    image: pos_react:latest
+    container_name: react_app
+    #environment:
+    #  REACT_APP_API_URL: http://spring-app:9000
+    ports:
+      - "3000:3000"
+
+
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: IESS
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  spring-app:
+    image: iess_pos:latest
+    container_name: spring-app
+    environment:
+      SPRING_APPLICATION_JSON: '{"server.port": "9000", 
+      "spring.datasource.url": "jdbc:mysql://mysql:3306/IESS", 
+      "spring.datasource.username": "user", "spring.datasource.password": "secret", 
+      "spring.jpa.hibernate.ddl-auto": "update", "spring.jpa.show-sql": "true", 
+      
+      "logging.level.org.springframework.security":"DEBUG",
+      
+      "spring.kafka.bootstrap-servers": "kafka:9092", "spring.kafka.consumer.group-id": "order-processing-group-1",
+      "auto.create.topics.enable":"true", "spring.kafka.consumer.auto-offset-reset":"earliest",
+      "spring.kafka.consumer.key-deserializer":"org.apache.kafka.common.serialization.StringDeserializer",
+     "spring.kafka.consumer.value-deserializer":"org.apache.kafka.common.serialization.StringDeserializer"
+      }'
+    ports:
+      - "9000:9000"
+
+    depends_on:
+      - mysql
+      - kafka
+      #- react_app
+
+
+  zookeeper:
+    restart: always
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper-volume:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    restart: always
+    container_name: kafka
+    image: docker.io/bitnami/kafka:3.3
+    ports:
+      - "9093:9093"
+    volumes:
+      - "kafka-volume:/bitnami"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      #- KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://kafka:9093
+
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+    depends_on:
+      - zookeeper
+
+  kafka-producer:
+    build: ./data-generation/
+    depends_on:
+      - kafka
+
+volumes:
+    kafka-volume:
+    zookeeper-volume:
+
+      

@@ -1,0 +1,358 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import '../assets/css/Stocks.css';
+
+
+
+
+const Stocks = () => {
+    const [employeeData, setEmployeeData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const itemsPerPage = 7;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:9000/api/stock/products');
+                setEmployeeData(response.data);
+                localStorage.setItem('employeeData', JSON.stringify(response.data));
+            } catch (error) {
+                console.error('Erro ao buscar informações:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+    const [updateFormData, setUpdateFormData] = useState({
+        id: '',
+        product: '',
+        category: '',
+        curr_quantity: '',
+        price: '',
+        provider: '',
+    });
+    const [productToUpdate, setProductToUpdate] = useState(null);
+
+    const handleUpdate = (product) => {
+        // Set the product to be updated in the state
+        setProductToUpdate(product);
+
+        // Pre-fill the update form with the current product details
+        setUpdateFormData({
+            id: product.id,
+            product: product.product,
+            category: product.category,
+            curr_quantity: product.curr_quantity,
+            price: product.price,
+            provider: product.provider,
+        });
+
+        setShowUpdatePopup(true);
+    };
+
+    const handleUpdateFormSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            // Send a PUT request to update the product on the server
+            await axios.put(`http://localhost:9000/api/stock/update?id=${updateFormData.id}`, updateFormData);
+
+            // Update the product details in the employeeData state
+            const updatedEmployeeData = employeeData.map(item => {
+                if (item.id === updateFormData.id) {
+                    return {
+                        ...item,
+                        product: updateFormData.product,
+                        category: updateFormData.category,
+                        curr_quantity: updateFormData.curr_quantity,
+                        price: updateFormData.price,
+                        provider: updateFormData.provider,
+                    };
+                }
+                return item;
+            });
+            setEmployeeData(updatedEmployeeData);
+
+            // Close the update popup
+            setShowUpdatePopup(false);
+
+            console.log(`Product with ID: ${updateFormData.id} updated successfully.`);
+        } catch (error) {
+            console.error('Error updating product:', error);
+        }
+    };
+    // const handleSearch = async () => {
+    //     try {
+    //         let response;
+            
+    //         if (searchTerm === '') {
+    //             response = await axios.get('http://localhost:9000/api/stock/products');
+    //         }
+    //         else
+    //         {
+    //             response = await axios.get(`http://localhost:9000/api/stock/search?term=${searchTerm}`);
+    //         }
+            
+          
+    //         setEmployeeData(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching search results:', error);
+    //     }
+    // };
+    const handleSearch = async () => {
+        try {
+            let response;
+    
+            if (searchTerm === '') {
+                response = await axios.get('http://localhost:9000/api/stock/products');
+            } else if (!isNaN(searchTerm)) {
+                response = await axios.get(`http://localhost:9000/api/stock/product?id=${searchTerm}`);
+                // Certifique-se de que o resultado seja uma matriz para manter a consistência com a pesquisa por termo
+                response.data = [response.data];
+            } else {
+                response = await axios.get(`http://localhost:9000/api/stock/search?term=${searchTerm}`);
+            }
+    
+            setEmployeeData(response.data);
+        } catch (error) {
+            console.error('Erro ao buscar resultados da pesquisa:', error);
+        }
+    };
+    
+    
+
+    const debounce = (func, delay) => {
+        let inDebounce;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(inDebounce);
+            inDebounce = setTimeout(() => func.apply(context, args), delay);
+        };
+    };
+
+    const debouncedSearch = debounce(() => handleSearch(), 300);
+
+    
+    const handleViewDetails = (id) => {
+        const product = employeeData.find(item => item.id === id);
+        setSelectedProduct(product);
+        setShowPopup(true);
+    };
+
+    const closePopup = () => {
+        setShowPopup(false);
+        setSelectedProduct(null);
+    };
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = employeeData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalItems = employeeData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+
+    const handleRemove = async (id) => {
+        try {
+            // Faz a requisição DELETE para a API
+            await axios.delete(`http://localhost:9000/api/stock/delete?id=${id}`);
+    
+            // Atualiza o estado para remover o item da lista exibida
+            const updatedEmployeeData = employeeData.filter((item) => item.id !== id);
+            setEmployeeData(updatedEmployeeData);
+    
+            // Exibe uma mensagem de sucesso (você pode adicionar um estado para isso)
+            console.log(`Produto com ID: ${id} removido com sucesso.`);
+        } catch (error) {
+            console.error('Erro ao remover produto:', error);
+    
+            // Exibe uma mensagem de erro (você pode adicionar um estado para isso)
+            console.error('Erro ao remover produto:', error);
+        }
+    };
+    
+    
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const range = (start, end) => {
+        return Array.from({ length: (end - start) }, (_, i) => start + i);
+    };
+
+    // Get the current pagination group
+    const paginationRange = () => {
+        const currentRangeStart = Math.floor((currentPage - 1) / itemsPerPage) * itemsPerPage;
+        return range(currentRangeStart, Math.min(currentRangeStart + itemsPerPage, totalPages));
+    };
+
+    return (
+        <div className="graficos-container">
+            <h1 className='stocks-title'>Stocks Admin</h1>
+            {/* <input
+                type='text'
+                placeholder='Search...'
+                value={searchTerm}
+                onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    debouncedSearch();
+                    console.log(e);
+                }}
+/> */}
+<input
+    type='text'
+    placeholder='Search...'
+    value={searchTerm}
+    onChange={(e) => {
+        setSearchTerm(e.target.value);
+        debouncedSearch();
+    }}
+    onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    }}
+/>
+
+                  
+            <div className="stocks-container">
+                <table>
+                    {/* Table headers and rows */}
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Current Quantity</th>
+                            <th>Price</th>
+
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    {currentItems.map((item) => (
+        <tr key={item.id}>
+            <td>{item.id}</td>
+            <td>{item.product}</td>
+            <td>{item.category}</td>
+            <td>{item.curr_quantity}</td>
+            <td>{item.provider}</td>
+            
+            <td>
+                <div className='actions'>
+                    <button onClick={() => handleViewDetails(item.id)}>Ver Detalhes</button>
+                    <button onClick={() => handleRemove(item.id)}>Remover</button>
+                    <button onClick={() => handleUpdate(item)}>Atualizar</button>
+                </div>
+                {showUpdatePopup && productToUpdate && (
+                <div className="popup">
+                    <div className="popup-inner">
+                        <h1>Update Product</h1>
+                        <form onSubmit={handleUpdateFormSubmit}>
+                            {/* Add form fields for updating product details */}
+                            <label>ID:</label>
+                            <input
+                                type="text"
+                                value={updateFormData.id}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, id: e.target.value })}
+                                disabled // ID should not be editable
+                            />
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                value={updateFormData.product}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, product: e.target.value })}
+                                required
+                            />  
+                            <label>Category:</label>
+                            <input
+                                type="text"
+                                value={updateFormData.category}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, category: e.target.value })}
+                                required
+                            />
+                            <label>Current Quantity:</label>
+                            <input
+
+                                type="text"
+                                value={updateFormData.curr_quantity}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, curr_quantity: e.target.value })}
+                                required
+                            />
+                            <label>Price:</label>
+                            <input
+                                type="text"
+                                value={updateFormData.price}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, price: e.target.value })}
+                                required
+                            />
+                            <label>Provider:</label>
+                            <input
+
+                                type="text"
+                                value={updateFormData.provider}
+                                onChange={(e) => setUpdateFormData({ ...updateFormData, provider: e.target.value })}
+                                required
+                            />
+
+                            
+                            <button type="submit">Update</button>
+                        </form>
+                        <button className="popup__close" onClick={() => setShowUpdatePopup(false)}>Close</button>
+                    </div>
+                </div>
+            )}
+                {showPopup && selectedProduct && (
+                    <div className="popup">
+                        <div className="popup-inner">
+                            <h1>Detalhes do Produto</h1>
+                            <p>ID: {selectedProduct.id}</p>
+                            <p>Nome: {selectedProduct.product}</p>
+                            <p>Categoria: {selectedProduct.category}</p>
+                            <p>Quantidade: {selectedProduct.curr_quantity}</p>
+                            <p>Preço: ${selectedProduct.price.toFixed(2)}</p>
+                            <p>Fornecedor: {selectedProduct.provider}</p>
+                            <button className="popup__close" onClick={closePopup}>Fechar</button>
+                        </div>
+                    </div>
+                )}
+            </td>
+        </tr>
+    ))}
+</tbody>
+
+                </table>
+                <nav>
+                    <ul className='pagination'>
+                        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                            <a onClick={() => paginate(Math.max(currentPage - 1, 1))} className='page-link'>
+                                &#171;
+                            </a>
+                        </li>
+                        
+                        {paginationRange().map(number => (
+                            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+                                <a onClick={() => paginate(number)} className='page-link'>
+                                    {number}
+                                </a>
+                            </li>
+                        ))}
+                        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                            <a onClick={() => paginate(Math.min(currentPage + 1, totalPages))} className='page-link'>
+                                &#187;
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    );
+};
+
+export default Stocks;
+
+

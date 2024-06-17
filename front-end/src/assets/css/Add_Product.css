@@ -1,0 +1,315 @@
+.stocks-container {
+  background-color: #fff;
+  padding: 20px;
+  height: 90vh;
+  width: 90vw;
+  box-sizing: border-box;
+  border: 10px solid #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stocks-title {
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  font-size: 24px;
+  position: relative;
+}
+
+.stocks-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: black;
+  opacity: 0.7;
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.stocks-table th,
+.stocks-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.stocks-table th {
+  background-color: #f2f2f2;
+}
+
+.stocks-table td.stock-value {
+  padding: 8px;
+  text-align: center;
+  position: relative;
+}
+
+.stocks-table td.stock-value span {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.stocks-table td.stock-value::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+
+.stocks-table td.stock-value.low-stock::before {
+  background-color: #ff3333; 
+}
+
+.stocks-table td.stock-value.medium-stock::before {
+  background-color: #ffd633;
+}
+
+
+.stocks-container {
+  background-color: #fff;
+  padding: 20px;
+  height: 90vh;
+  width: 90vw;
+  box-sizing: border-box;
+  border: 10px solid #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: black; 
+}
+
+.stocks-title {
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+  position: relative;
+  color: black;
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.stocks-table th, .stocks-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.stocks-table th {
+  background-color: #f2f2f2;
+}
+
+
+.delete-button{
+  background-color: #ff0000;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100px;
+}
+
+.delete-button:hover {
+  background-color: #9c0303;
+}
+
+.details-button{
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px; 
+}
+
+
+.button-container button {
+  margin-right: 10px; 
+}
+.exit-button{
+  background-color: #ff0000;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+
+}
+
+.exit-button:hover {
+  background-color: #9c0303;
+}
+
+.chart-button{
+  background-color: #3347fa;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+
+}
+
+.chart-button:hover {
+  background-color: #0f1b86;
+}
+
+.action-cell {
+  display: flex;
+  gap: 10px;
+}
+
+
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-popup {
+  background: #fff; 
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+}
+
+.popup-content {
+  text-align: left;
+}
+
+.popup-content h3 {
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  margin-bottom: 8px;
+}
+
+.popup-content button {
+  padding: 8px 12px;
+  background: #007bff; 
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 3rem;
+  margin-top: 1rem; 
+}
+
+.search-bar input {
+  margin-right: 1rem; 
+}
+.search-bar input {
+  margin-right: 6rem; 
+}
+
+.search-bar button {
+ 
+  cursor: pointer;
+}
+
+.page-button {
+  background-color: #808080; 
+  color: white; 
+  padding: 10px 15px; 
+  border: none;
+  border-radius: 10px; 
+  cursor: pointer;
+  transition: background-color 0.3s; 
+}
+
+.page-button:hover {
+  background-color: #555; 
+}
+
+
+.page-button.prev {
+  margin-right: 10px; 
+}
+
+.page-button.next {
+  margin-left: 10px; 
+}
+
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: center; 
+  padding: 0;
+}
+
+.pagination .page-item {
+  margin: 0 5px; 
+}
+
+.pagination .page-link {
+  display: block;
+  padding: 8px 16px; 
+  margin: 5px; 
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f8f9fa; 
+  color: #007bff;
+  text-decoration: none; 
+  cursor: pointer; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+  background-color: #007bff; 
+  color: white;
+}
+
+.pagination .page-link.active {
+  background-color: #0069d9; 
+  color: white;
+  cursor: default; 
+}
+
+.pagination .page-link.disabled {
+  color: #6c757d; 
+  pointer-events: none; 
+  background-color: #e9ecef; 
+}
+
+

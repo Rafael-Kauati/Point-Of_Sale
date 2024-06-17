@@ -1,0 +1,192 @@
+openapi: 3.0.1
+info:
+  title: IESS API
+  version: 1.0.0
+paths:
+  /api/employees/all:
+    get:
+      summary: Lista todos os usuários
+      responses:
+        '200':
+          description: Lista de usuários obtida com sucesso
+  /api/employees/sales:
+    get:
+      summary: Obtém as vendas de um usuário
+      parameters:
+        - name: id
+          in: query
+          description: ID do usuário
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de vendas obtida com sucesso
+  /auth/signin:
+    post:
+      summary: Registra um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Registro realizado com sucesso
+  /auth/login:
+    post:
+      summary: Autentica um usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequest'
+      responses:
+        '200':
+          description: Autenticação realizada com sucesso
+  /auth/refresh-token:
+    post:
+      summary: Atualiza o token de autenticação
+      responses:
+        '200':
+          description: Token atualizado com sucesso
+  /api/payment/{user_id}:
+    post:
+      summary: Realiza um pagamento
+      parameters:
+        - name: user_id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Pagamento realizado com sucesso
+  /api/stock/test:
+    get:
+      summary: Testa a API de estoque
+      responses:
+        '200':
+          description: Teste realizado com sucesso
+  /api/stock/products:
+    get:
+      summary: Lista todos os produtos em estoque
+      responses:
+        '200':
+          description: Lista de produtos obtida com sucesso
+  /api/stock/{name}:
+    get:
+      summary: Obtém um produto pelo nome
+      parameters:
+        - name: name
+          in: path
+          description: Nome do produto
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Produto obtido com sucesso
+  /api/stock/product:
+    get:
+      summary: Obtém um produto pelo ID
+      parameters:
+        - name: id
+          in: query
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto obtido com sucesso
+  /api/stock/:
+    post:
+      summary: Adiciona um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Produto adicionado com sucesso
+  /api/stock/{id}:
+    put:
+      summary: Atualiza um produto pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+    delete:
+      summary: Exclui um produto pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto excluído com sucesso
+  /api/stock/storeAll:
+    post:
+      summary: Adiciona vários produtos de uma vez
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Produtos adicionados com sucesso
+  /api/stock/delete/all:
+    delete:
+      summary: Exclui todos os produtos
+      responses:
+        '200':
+          description: Todos os produtos excluídos com sucesso
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        // Propriedades do RegisterRequest
+    AuthenticationRequest:
+      type: object
+      properties:
+        // Propriedades do AuthenticationRequest
+    PaymentRequest:
+      type: object
+      properties:
+        // Propriedades do PaymentRequest
+    Product:
+      type: object
+      properties:
+        // Propriedades do Product

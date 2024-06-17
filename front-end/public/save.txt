@@ -1,0 +1,96 @@
+
+import React, { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto';
+import '../assets/css/Admin_Graf.css';
+
+const Admin_Graf = () => {
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    chartRef.current = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ],
+        datasets: [{
+          label: 'Funcinario 1',
+          data: [50, 70, 65, 80, 90, 75, 85, 60, 70, 75, 80, 95],
+          borderColor: 'blue',
+          borderWidth: 2,
+          fill: false,
+        },
+        {
+            label: 'Funcinario 2',
+            data: [52, 33, 15, 60, 40, 25, 25, 10, 74, 95, 23, 25],
+            borderColor: 'red',
+            borderWidth: 2,
+            fill: false,
+          }
+    ],
+        
+      },
+    });
+
+    
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+    };
+  }, []);
+
+  return (
+    <div className="graficos-container">
+      <div className="graficos-header">
+        <h2 className="graficos-title">Página de Gráficos do Empregado</h2>
+      </div>
+      <div className="graficos-content-container">
+        <div className="graficos-info">
+          <h2>Informações do Empregado</h2>
+          <div className='Descriao'>
+            <p>Nome: John Doe</p>
+          <p>Idade: 30</p>
+          <p>Sexo: Masculino</p>
+          <p>Email: john.doe@example.com</p>
+          </div>
+        {/* BOTAO de selecao de grafico  */}
+       
+        </div>
+        <div className="graficos-content">
+          <h2>Vendas Mensais - Último Ano</h2>
+
+          <div>
+         
+        <div className="container">
+          <div className="shopping-cart">
+            <span role="img" aria-label="Carrinho de Compras">&#128722;</span>
+            <span className="cart-value">Sales: 670,00$</span>
+          </div>
+          <div className="purchase-total">
+            <span role="img" aria-label="Sacola de Compras">&#128230;</span>
+            <span className="total-value">Total Purchases: 123$</span>
+          </div>
+        </div>
+
+          
+        </div>
+          <canvas id="myChart" width="400" height="200"></canvas>
+          <div className="graficos-buttons">
+            {/* <button className="payment-button" title="Símbolo de Pagamento">&#128179; Pagar</button> */}
+            <button className="exit-button" title="Sair">&#128682; Sair</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Admin_Graf;

@@ -1,0 +1,141 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-image: url('../../assets/images/foto.jpg');
+  background-size: cover;
+  background-position: center;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+}
+
+.container {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  width: 500px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  
+}
+
+
+h1.titul {
+  font-size: 48px;
+  color: #fff;
+  margin: 0;
+  margin-left: 18%;
+}
+
+
+.title-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20%;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px; 
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 24px; 
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5rem ;
+  margin-right: 5rem ;
+}
+
+
+button.register-button {
+  background-color: #3498db;
+}
+
+button.register-button:hover {
+  background-color: #2980b9;
+}
+
+
+.title-container {
+  text-align: center;
+  margin-top: 20px; 
+}
+
+.titul {
+  font-size: 24px;
+  color: #333; 
+  font-weight: bold;
+}
+
+
+.graficos-info {
+  background-color: #f0f0f0;
+  padding: 20px;
+  flex-grow: 1;
+  color: black;
+  width: 25%;
+}
+
+.graficos-info p {
+  color: #333; 
+}
+
+
+label strong {
+  font-weight: bold; 
+
+}
+
+
+.login-button {
+  background-color: #4caf50;
+  
+}
+
+.login-button:hover {
+  background-color: #388e3c;
+}
